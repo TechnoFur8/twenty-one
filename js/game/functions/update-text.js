@@ -1,4 +1,4 @@
-import { label } from "../../../assets/models/card.js"
+import { label } from "../../../public/models/card.js"
 
 let tvLabels = []
 

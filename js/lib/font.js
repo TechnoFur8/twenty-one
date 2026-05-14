@@ -1,6 +1,6 @@
 import { FontLoader } from "three/examples/jsm/loaders/FontLoader.js"
 import { TTFLoader } from "three/examples/jsm/loaders/TTFLoader.js"
-import robotoFontUrl from "../../assets/fonts/Roboto/static/Roboto-Regular.ttf?url"
+import robotoFontUrl from "../../public/fonts/Roboto/static/Roboto-Regular.ttf?url"
 
 const fontLoader = new FontLoader()
 const ttfLoader = new TTFLoader()
