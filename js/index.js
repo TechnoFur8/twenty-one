@@ -111,6 +111,7 @@ let firstPlayerCard = null
 let playerFirstLabel = null
 let playerScoreLabel = null
 let dealingTrumpCards = []
+let pendingBotTimers = []
 
 const sidePanel = document.getElementById("side-panel")
 window.addEventListener("keydown", (e) => {
@@ -142,27 +143,29 @@ function clearScene() {
     botCardCubes.length = 0
     botCardLabels.forEach(l => scene.remove(l))
     botCardLabels.length = 0
-    if (enemyLabel)      { scene.remove(enemyLabel);      enemyLabel = null }
-    if (fakeCard)        { scene.remove(fakeCard);        fakeCard = null }
-    if (fakeCardLabel)   { scene.remove(fakeCardLabel);   fakeCardLabel = null }
-    if (playerFakeCard)  { scene.remove(playerFakeCard);  playerFakeCard = null }
-    if (playerFirstLabel){ scene.remove(playerFirstLabel);playerFirstLabel = null }
-    if (playerScoreLabel){ scene.remove(playerScoreLabel);playerScoreLabel = null }
+    if (enemyLabel) { scene.remove(enemyLabel); enemyLabel = null }
+    if (fakeCard) { scene.remove(fakeCard); fakeCard = null }
+    if (fakeCardLabel) { scene.remove(fakeCardLabel); fakeCardLabel = null }
+    if (playerFakeCard) { scene.remove(playerFakeCard); playerFakeCard = null }
+    if (playerFirstLabel) { scene.remove(playerFirstLabel); playerFirstLabel = null }
+    if (playerScoreLabel) { scene.remove(playerScoreLabel); playerScoreLabel = null }
     dealingTrumpCards.forEach(c => scene.remove(c))
     dealingTrumpCards = []
+    pendingBotTimers.forEach(t => clearTimeout(t))
+    pendingBotTimers = []
+    if (firstBotCard) scene.remove(firstBotCard)
     firstBotCard = null
     firstBotCardValue = null
     firstPlayerCard = null
     const el = document.getElementById("score")
-    el.textContent = "0"
-    el.style.color = ""
+    if (el) { el.textContent = "0"; el.style.color = "" }
 }
 
 function showFinalScreen() {
     let title, score
-    if (playerWins > botWins)      title = "Вы победили!"
+    if (playerWins > botWins) title = "Вы победили!"
     else if (botWins > playerWins) title = "Бот победил!"
-    else                           title = "Ничья!"
+    else title = "Ничья!"
     score = `${playerWins} : ${botWins}`
     document.getElementById("final-title").textContent = title
     document.getElementById("final-score").textContent = score
@@ -215,16 +218,23 @@ function showTrumpOnTable(texture) {
     }, 1500)
 }
 
+function scoreColor(sum) {
+    if (sum > getWinTarget()) return "red"
+    if (sum === getWinTarget()) return "green"
+    return "white"
+}
+
 function updatePlayerScoreVisual(sum) {
     if (playerScoreLabel) scene.remove(playerScoreLabel)
     playerScoreLabel = label(`${sum} / ${getWinTarget()}`, 0.1)
+    playerScoreLabel.material.color.set(scoreColor(sum))
     playerScoreLabel.position.set(START_X - 0.6, -0.48, 6)
     scene.add(playerScoreLabel)
     const el = document.getElementById("score")
-    el.textContent = sum
-    if (sum > getWinTarget()) el.style.color = "red"
-    else if (sum === getWinTarget()) el.style.color = "green"
-    else el.style.color = ""
+    if (el) {
+        el.textContent = sum
+        el.style.color = scoreColor(sum)
+    }
 }
 
 function addBotCardVisual(botNewCard) {
@@ -318,7 +328,7 @@ function useTrump(idx) {
             // Очистить все карты игрока и показать 2 новых
             cardCubes.forEach(c => scene.remove(c))
             cardCubes.length = 0
-            if (playerFakeCard)   { scene.remove(playerFakeCard);   playerFakeCard = null }
+            if (playerFakeCard) { scene.remove(playerFakeCard); playerFakeCard = null }
             if (playerFirstLabel) { scene.remove(playerFirstLabel); playerFirstLabel = null }
             if (playerScoreLabel) { scene.remove(playerScoreLabel); playerScoreLabel = null }
             firstPlayerCard = null
@@ -432,10 +442,10 @@ function dealAndStartRound() {
         })
     }
 
-    dealTrumpCard(newTrumps[0].texture, START_X,           6,   0)
-    dealTrumpCard(newTrumps[1].texture, START_X + SPACING, 6,   0.2)
-    dealTrumpCard("?",                  START_X,           4.7, 0.1)
-    dealTrumpCard("?",                  START_X + SPACING, 4.7, 0.3)
+    dealTrumpCard(newTrumps[0].texture, START_X, 6, 0)
+    dealTrumpCard(newTrumps[1].texture, START_X + SPACING, 6, 0.2)
+    dealTrumpCard("?", START_X, 4.7, 0.1)
+    dealTrumpCard("?", START_X + SPACING, 4.7, 0.3)
 
     setTimeout(() => {
         const snapshot = dealingTrumpCards.splice(0)
@@ -507,116 +517,118 @@ function addPlayerCardVisual(newCard, sumCard) {
 
     if (playerScoreLabel) scene.remove(playerScoreLabel)
     playerScoreLabel = label(`${sumCard} / ${getWinTarget()}`, 0.1)
+    playerScoreLabel.material.color.set(scoreColor(sumCard))
     playerScoreLabel.position.set(START_X - 0.6, -0.48, 6)
     scene.add(playerScoreLabel)
 
     const element = document.getElementById("score")
-    element.textContent = sumCard
-    if (sumCard > getWinTarget()) element.style.color = "red"
-    else if (sumCard === getWinTarget()) element.style.color = "green"
-    else element.style.color = ""
+    if (element) {
+        element.textContent = sumCard
+        element.style.color = scoreColor(sumCard)
+    }
 }
 
 function runRound() {
-onGetCard((result, botResult, finishGame) => {
-    if (result !== null) {
-        const [newCard, sumCard] = result
-        addPlayerCardVisual(newCard, sumCard)
-    }
+    onGetCard((result, botResult, finishGame) => {
+        if (result !== null) {
+            const [newCard, sumCard] = result
+            addPlayerCardVisual(newCard, sumCard)
+        }
 
-    if (finishGame) {
-        setTimeout(() => {
-            scene.remove(fakeCard)
-            if (fakeCardLabel) scene.remove(fakeCardLabel)
-            scene.add(firstBotCard)
-            const firstBotLabel = label(String(firstBotCardValue), 0.08)
-            firstBotLabel.position.set(botCardCubes[0].position.x, -0.45, 4.7)
-            scene.add(firstBotLabel)
+        if (finishGame) {
+            setTimeout(() => {
+                scene.remove(fakeCard)
+                if (fakeCardLabel) scene.remove(fakeCardLabel)
+                scene.add(firstBotCard)
+                const firstBotLabel = label(String(firstBotCardValue), 0.08)
+                firstBotLabel.position.set(botCardCubes[0].position.x, -0.45, 4.7)
+                scene.add(firstBotLabel)
 
-            scene.remove(playerFakeCard)
-            if (playerFirstLabel) scene.remove(playerFirstLabel)
-            scene.add(firstPlayerCard)
-
-            if (enemyLabel) scene.remove(enemyLabel)
-            const firstPos = botCardCubes[0].position
-            enemyLabel = label(`${getBotSum()} / ${getWinTarget()}`, 0.1)
-            enemyLabel.position.set(firstPos.x - 0.3, firstPos.y + 0.2, firstPos.z)
-            scene.add(enemyLabel)
-        }, 2000)
-    }
-
-    if (botResult !== null) {
-        setWaiting(true)
-        updateTurnLabels("Ход бота...", scene)
-        setTimeout(() => {
-            const [botNewCard] = botResult
-
-            const botCardCube = card(botNewCard)
-            const targetX = START_X + botCardCubes.length * SPACING
-
-            botCardCubes.push(botCardCube)
-
-            if (botCardCubes.length === 1) {
-                firstBotCard = botCardCube
-                firstBotCardValue = botNewCard
-                botCardCube.position.set(targetX, -0.68, 4.7)
-                fakeCard = card("?")
-                fakeCard.position.set(5, -0.68, 4.7)
-                fakeCard.rotation.y = 0
-                scene.add(fakeCard)
-                gsap.to(fakeCard.position, {
-                    x: targetX,
-                    y: -0.68,
-                    z: 4.7,
-                    duration: 0.5,
-                    ease: "power2.out"
-                })
-                gsap.to(fakeCard.rotation, {
-                    y: "+=" + Math.PI * 2,
-                    duration: 0.5,
-                    ease: "power2.out",
-                    onComplete: () => {
-                        fakeCardLabel = label("?", 0.08)
-                        fakeCardLabel.position.set(targetX, -0.45, 4.7)
-                        scene.add(fakeCardLabel)
-                    }
-                })
-            } else {
-                botCardCube.position.set(5, -0.68, 4.7)
-                botCardCube.rotation.y = Math.PI
-                scene.add(botCardCube)
-                gsap.to(botCardCube.position, {
-                    x: targetX,
-                    y: -0.68,
-                    z: 4.7,
-                    duration: 0.5,
-                    ease: "power2.out",
-                    onComplete: () => {
-                        const cardLabel = label(String(botNewCard), 0.08)
-                        cardLabel.position.set(targetX, -0.45, 4.7)
-                        botCardLabels.push(cardLabel)
-                        scene.add(cardLabel)
-                    }
-                })
-                gsap.to(botCardCube.rotation, {
-                    y: "+=" + Math.PI * 2,
-                    duration: 0.5,
-                    ease: "power2.out"
-                })
+                scene.remove(playerFakeCard)
+                if (playerFirstLabel) scene.remove(playerFirstLabel)
+                scene.add(firstPlayerCard)
 
                 if (enemyLabel) scene.remove(enemyLabel)
-                const botsCard = getBotArr()
                 const firstPos = botCardCubes[0].position
-                enemyLabel = label(`?+${botsCard}/${getWinTarget()}`, 0.1)
+                enemyLabel = label(`${getBotSum()} / ${getWinTarget()}`, 0.1)
+                enemyLabel.material.color.set(scoreColor(getBotSum()))
                 enemyLabel.position.set(firstPos.x - 0.3, firstPos.y + 0.2, firstPos.z)
                 scene.add(enemyLabel)
-            }
-            setWaiting(false)
-            updateTurnLabels("Ваш ход", scene)
-        }, 2000)
-    }
+            }, 2000)
+        }
 
-}, onRoundEnd, scene)
+        if (botResult !== null) {
+            setWaiting(true)
+            updateTurnLabels("Ход бота...", scene)
+            pendingBotTimers.push(setTimeout(() => {
+                const [botNewCard] = botResult
+
+                const botCardCube = card(botNewCard)
+                const targetX = START_X + botCardCubes.length * SPACING
+
+                botCardCubes.push(botCardCube)
+
+                if (botCardCubes.length === 1) {
+                    firstBotCard = botCardCube
+                    firstBotCardValue = botNewCard
+                    botCardCube.position.set(targetX, -0.68, 4.7)
+                    fakeCard = card("?")
+                    fakeCard.position.set(5, -0.68, 4.7)
+                    fakeCard.rotation.y = 0
+                    scene.add(fakeCard)
+                    gsap.to(fakeCard.position, {
+                        x: targetX,
+                        y: -0.68,
+                        z: 4.7,
+                        duration: 0.5,
+                        ease: "power2.out"
+                    })
+                    gsap.to(fakeCard.rotation, {
+                        y: "+=" + Math.PI * 2,
+                        duration: 0.5,
+                        ease: "power2.out",
+                        onComplete: () => {
+                            fakeCardLabel = label("?", 0.08)
+                            fakeCardLabel.position.set(targetX, -0.45, 4.7)
+                            scene.add(fakeCardLabel)
+                        }
+                    })
+                } else {
+                    botCardCube.position.set(5, -0.68, 4.7)
+                    botCardCube.rotation.y = Math.PI
+                    scene.add(botCardCube)
+                    gsap.to(botCardCube.position, {
+                        x: targetX,
+                        y: -0.68,
+                        z: 4.7,
+                        duration: 0.5,
+                        ease: "power2.out",
+                        onComplete: () => {
+                            const cardLabel = label(String(botNewCard), 0.08)
+                            cardLabel.position.set(targetX, -0.45, 4.7)
+                            botCardLabels.push(cardLabel)
+                            scene.add(cardLabel)
+                        }
+                    })
+                    gsap.to(botCardCube.rotation, {
+                        y: "+=" + Math.PI * 2,
+                        duration: 0.5,
+                        ease: "power2.out"
+                    })
+
+                    if (enemyLabel) scene.remove(enemyLabel)
+                    const botsCard = getBotArr()
+                    const firstPos = botCardCubes[0].position
+                    enemyLabel = label(`?+${botsCard}/${getWinTarget()}`, 0.1)
+                    enemyLabel.position.set(firstPos.x - 0.3, firstPos.y + 0.2, firstPos.z)
+                    scene.add(enemyLabel)
+                }
+                setWaiting(false)
+                updateTurnLabels("Ваш ход", scene)
+            }, 2000))
+        }
+
+    }, onRoundEnd, scene)
 } // runRound
 
 dealAndStartRound()
@@ -629,11 +641,11 @@ dealAndStartRound()
 
 table(scene)
 bigTvRight(scene)
-// smalTv(scene)
+smalTv(scene)
 
-// boxs(scene)
-// tvInBox(scene)
-// smallTvInBox(scene)
+boxs(scene)
+tvInBox(scene)
+smallTvInBox(scene)
 
 painting(scene)
 
