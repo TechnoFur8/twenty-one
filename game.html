@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>21 — Игра</title>
+    <link rel="stylesheet" href="./styles/style.css">
+</head>
+
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"
+        integrity="sha512-NcZdtrT77bJr4STcmsGAESr06BYGE8woZdSdEgqnpyqac7sugNO+Tr4bGwGF3MsnEkGKhU2KL2xh6Ec+BqsaHA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <div id="loading-overlay">
+        <div class="loading-content">
+            <p class="loading-title">Загрузка</p>
+            <div class="loading-bar-track">
+                <div class="loading-bar" id="loading-bar"></div>
+            </div>
+            <p class="loading-percent" id="loading-percent">0%</p>
+        </div>
+    </div>
+
+    <p class="score">Счёт: <span id="score">0</span></p>
+
+    <div id="round-hud">
+        <p id="round-label">Раунд <span id="round-num">1</span> / 5</p>
+        <p id="round-score">Вы: <span id="player-wins">0</span> — Бот: <span id="bot-wins">0</span></p>
+    </div>
+
+    <div id="final-screen">
+        <p id="final-title"></p>
+        <p id="final-score"></p>
+    </div>
+
+    <div id="side-panel">
+        <p class="side-panel-title">Козыри</p>
+        <div id="trump-inventory"></div>
+    </div>
+
+    <script src="/js/index.js" type="module"></script>
+</body>
+
+</html>

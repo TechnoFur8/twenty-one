@@ -35,7 +35,9 @@ export function label(text, size = 0.035) {
 export function card(number) {
     const texturePath = number === "?"
         ? "/textures/cards/back.png"
-        : `/textures/cards/${number}.png`
+        : typeof number === "string" && number.startsWith("/")
+            ? number
+            : `/textures/cards/${number}.png`
 
     const texture = textureLoader.load(texturePath)
 

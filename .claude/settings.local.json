@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir -p /home/nikita/work/twenty-one/js/game/trumps)",
+      "Bash(node --input-type=module --experimental-vm-modules)",
+      "Bash(npx vite *)",
+      "Read(//usr/local/bin/**)",
+      "Read(//home/nikita/.nvm/versions/node/**)",
+      "Bash(/home/nikita/.nvm/versions/node/v24.13.1/bin/node /home/nikita/.nvm/versions/node/v24.13.1/bin/npx vite build)",
+      "Bash(PATH=/home/nikita/.nvm/versions/node/v24.13.1/bin:__TRACKED_VAR__ npx vite build)"
+    ],
+    "additionalDirectories": [
+      "/home/nikita/work/twenty-one/js/game"
+    ]
+  }
+}

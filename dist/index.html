@@ -4,27 +4,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-  <script type="module" crossorigin src="/assets/index-C58f2yKn.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-nJiXDFIT.css">
+    <title>TwentyOne</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+  <script type="module" crossorigin src="/assets/main-DCCC3Te9.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/style-BdKITxc7.js">
+  <link rel="stylesheet" crossorigin href="/assets/style-txuz-zs4.css">
 </head>
 
 <body>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"
-        integrity="sha512-NcZdtrT77bJr4STcmsGAESr06BYGE8woZdSdEgqnpyqac7sugNO+Tr4bGwGF3MsnEkGKhU2KL2xh6Ec+BqsaHA=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-    <div id="loading-overlay">
-        <div class="loading-content">
-            <p class="loading-title">Загрузка</p>
-            <div class="loading-bar-track">
-                <div class="loading-bar" id="loading-bar"></div>
+    <div id="main-menu">
+
+        <div class="menu-screen active" id="menu-home">
+            <div class="home-header">
+                <h1 class="menu-title">TWENTY<span class="title-spade">♠</span>ONE</h1>
+                <p class="menu-subtitle">by Aynura</p>
             </div>
-            <p class="loading-percent" id="loading-percent">0%</p>
+            <nav class="menu-nav">
+                <a href="/game.html" class="menu-btn menu-btn--primary">Начать игру</a>
+                <button class="menu-btn" data-open="rules">Правила</button>
+                <button class="menu-btn" data-open="settings">Настройки</button>
+                <button class="menu-btn" data-open="credits">Создатели</button>
+                <button class="menu-btn" data-open="stats">Статистика</button>
+            </nav>
         </div>
+
+        <div class="menu-screen" id="menu-rules">
+            <button class="btn-back" data-open="home">← Назад</button>
+            <h2 class="screen-title">Правила</h2>
+            <ul class="rules-list">
+                <li>Цель — набрать сумму карт ближе к 21, не превысив её</li>
+                <li>Карты 1–10 считаются по номиналу, туз (11) — как 11</li>
+                <li>Если сумма превышает 21 — проигрыш</li>
+                <li>Побеждает тот, чья сумма ближе к 21</li>
+            </ul>
+            <div class="rules-controls">
+                <p><kbd>Двойной клик</kbd> — взять карту</p>
+                <p><kbd>Двойной ПКМ</kbd> — пас</p>
+            </div>
+        </div>
+
+        <div class="menu-screen" id="menu-settings">
+            <button class="btn-back" data-open="home">← Назад</button>
+            <h2 class="screen-title">Настройки</h2>
+            <p class="placeholder-text">Настройки появятся в следующей версии</p>
+        </div>
+
+        <div class="menu-screen" id="menu-credits">
+            <button class="btn-back" data-open="home">← Назад</button>
+            <h2 class="screen-title">Создатели</h2>
+            <div class="credits-list">
+                <div class="credit-row">
+                    <span class="credit-role">Разработка</span>
+                    <span class="credit-name">Aynura</span>
+                </div>
+                <div class="credit-row">
+                    <span class="credit-role">3D движок</span>
+                    <span class="credit-name">Three.js</span>
+                </div>
+                <div class="credit-row">
+                    <span class="credit-role">Анимации</span>
+                    <span class="credit-name">GSAP</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="menu-screen" id="menu-stats">
+            <button class="btn-back" data-open="home">← Назад</button>
+            <h2 class="screen-title">Статистика</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-value" id="stat-wins">0</span>
+                    <span class="stat-label">Победы</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" id="stat-losses">0</span>
+                    <span class="stat-label">Поражения</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" id="stat-draws">0</span>
+                    <span class="stat-label">Ничьи</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" id="stat-total">0</span>
+                    <span class="stat-label">Всего игр</span>
+                </div>
+            </div>
+            <button class="menu-btn menu-btn--danger" id="reset-stats">Сбросить статистику</button>
+        </div>
+
     </div>
 
-    <p class="score">Счёт: <span id="score">0</span></p>
 </body>
 
 </html>
