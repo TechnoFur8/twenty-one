@@ -542,6 +542,7 @@ function runRound() {
                 scene.add(firstBotCard)
                 const firstBotLabel = label(String(firstBotCardValue), 0.08)
                 firstBotLabel.position.set(botCardCubes[0].position.x, -0.45, 4.7)
+                botCardLabels.push(firstBotLabel)
                 scene.add(firstBotLabel)
 
                 scene.remove(playerFakeCard)
