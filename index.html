@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TWENTY ONE</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<canvas id="scene"></canvas>
+<div id="vig"></div>
+<div id="grain"></div>
+<div id="blood"></div>
+<div id="deathDark"></div>
+<div id="wakeDark"></div>
+<div id="flash"></div>
+<div id="topbar"><div>&#9635;</div><div>&#8801;</div><div>&#9634;</div></div>
+
+<!-- BOOT -->
+<div id="boot">
+  <div id="bWelcome" class="bootstage"><div class="w1">WELCOME</div></div>
+  <div id="bDisc" class="bootstage"><div class="d1">DISCLAIMER</div><div class="d2">the game contains flashing lights<br>and scenes that might be unpleasing or disturbing for some players</div></div>
+  <div id="bLoad" class="bootstage"><div class="l1">LOADING</div><div class="l2">it won't take long</div></div>
+</div>
+
+<!-- MENU -->
+<div id="menu" class="hidden">
+  <div id="menuBg"></div>
+  <div id="menuBlack"></div>
+  <img id="logoImg" src="data:image/png;base64,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" alt="TWENTY ONE">
+  <div id="tagline"></div>
+  <div id="menuItems">
+    <div class="item" data-go="tutorial" data-i="tutorial">TUTORIAL</div>
+    <div class="item" data-go="play" data-i="play">PLAY</div>
+    <div class="item" data-go="rules" data-i="rules">RULES</div>
+    <div class="item" data-go="other" data-i="other">OTHER</div>
+  </div>
+</div>
+
+<!-- RULES -->
+<div id="rules" class="screen hidden">
+  <h2>RULES</h2>
+  <div class="rule-card" id="ruleBody"></div>
+  <div class="nav pe" id="ruleNext">NEXT</div>
+  <div class="return" id="ruleBack" data-i="back">BACK TO MENU</div>
+</div>
+
+<!-- TUTORIAL TOUR (overlays the live scene) -->
+<div id="tour" class="hidden">
+  <svg id="tourSvg"><defs><marker id="tArrow" markerWidth="13" markerHeight="13" refX="9" refY="6.5" orient="auto"><path d="M0,1 L12,6.5 L0,12 Z" fill="#cdae6a"/></marker></defs><path id="tourLine" fill="none" stroke="#cdae6a" stroke-width="3" marker-end="url(#tArrow)"/></svg>
+  <div id="tourHi"></div>
+  <div id="tourBox">
+    <div id="tourTitle"></div>
+    <div id="tourNote"></div>
+    <div id="tourDots"></div>
+    <div class="tour-nav">
+      <div class="tour-btn" id="tourPrev" data-i="tutprev">BACK</div>
+      <div class="tour-btn" id="tourSkip">SKIP</div>
+      <div class="tour-btn primary" id="tourNext" data-i="tutnext">NEXT</div>
+    </div>
+  </div>
+</div>
+
+<!-- OTHER -->
+<div id="other" class="screen hidden">
+  <div class="bgimg" id="otherBg"></div>
+  <h2>OTHER</h2>
+  <div class="tiles">
+    <div class="tile" id="tSettings"><div class="ic">&#9881;</div><div class="nm" data-i="settings">SETTINGS</div><div class="mir">SETTINGS</div></div>
+    <div class="tile" id="tCredits"><div class="ic">&#9203;</div><div class="nm" data-i="credits">CREDITS</div><div class="mir">CREDITS</div></div>
+    <div class="tile" id="tStats"><div class="ic">&#9776;</div><div class="nm" data-i="stats">STATS</div><div class="mir">STATS</div></div>
+  </div>
+  <div class="return" id="otherReturn" data-i="return">RETURN</div>
+</div>
+
+<!-- SETTINGS -->
+<div id="settings" class="screen hidden">
+  <div class="bgimg" id="setBg1"></div>
+  <h2 data-i="settings">SETTINGS</h2>
+  <div class="panel">
+    <div class="tabs">
+      <div class="tab active" data-tab="graphics" data-i="graphics">GRAPHICS</div>
+      <div class="tab" data-tab="audio" data-i="audio">AUDIO</div>
+      <div class="tab" data-tab="lang" data-i="languages">LANGUAGES</div>
+    </div>
+    <div id="setGraphics" class="setpane">
+      <div class="setrow"><span data-i="quality">Quality</span>
+        <div class="opt" id="gfxOpt"><span data-v="low" data-i="low">LOW</span><span data-v="medium" data-i="medium">MEDIUM</span><span data-v="high" data-i="high">HIGH</span></div></div>
+    </div>
+    <div id="setAudio" class="setpane hidden">
+      <div class="setrow"><span data-i="music">Music volume</span><input type="range" id="volSlider" min="0" max="100"></div>
+    </div>
+    <div id="setLang" class="setpane hidden">
+      <div class="setrow"><span data-i="language">Language</span>
+        <div class="opt" id="langOpt"><span data-v="en">ENGLISH</span><span data-v="ru">РУССКИЙ</span></div></div>
+    </div>
+    <div class="apply" id="applyBtn" data-i="apply">APPLY</div>
+  </div>
+  <div class="return" id="setReturn" data-i="return">RETURN</div>
+</div>
+
+<!-- CREDITS -->
+<div id="credits" class="screen hidden">
+  <div class="bgimg" id="setBg2"></div>
+  <h2 data-i="credits">CREDITS</h2>
+  <div class="panel">
+    <div class="credname">Ainura</div>
+    <div class="crednick">@hanafubuki</div>
+    <div class="credline">Owner &bull; Programmer &bull; UI<br>3D Modeler &bull; Tester<br>Main Menu Room &bull; Support</div>
+  </div>
+  <div class="return" id="credReturn" data-i="return">RETURN</div>
+</div>
+
+<!-- STATS -->
+<div id="stats" class="screen hidden">
+  <div class="bgimg" id="setBg3"></div>
+  <h2 data-i="stats">STATS</h2>
+  <div class="panel">
+    <div class="statrow"><span data-i="nickname">Nickname</span><input id="stNickInput" maxlength="16" style="background:#111;border:1px solid #444;color:#fff;padding:3px 8px;font-family:inherit;width:170px;text-align:right;pointer-events:auto"></div>
+    <div class="statrow"><span data-i="registered">Registered</span><b id="stReg">-</b></div>
+    <div class="statrow"><span data-i="games">Games played</span><b id="stGames">0</b></div>
+    <div class="statrow"><span data-i="wins">Wins</span><b id="stWins">0</b></div>
+    <div class="statrow"><span data-i="losses">Losses</span><b id="stLoss">0</b></div>
+    <div class="apply" id="renameBtn" data-i="rename">RENAME</div>
+  </div>
+  <div class="return" id="statReturn" data-i="return">RETURN</div>
+</div>
+
+<!-- EYELIDS -->
+<div id="lids" class="hidden"><div id="lidTop"></div><div id="lidBot"></div></div>
+
+<!-- HUD -->
+<div id="hud" class="hidden">
+  <div class="opp-total" id="oppTotal">?+0/21</div>
+  <div class="your-total" id="youTotal">0/21</div>
+  <div id="bustNote"><span style="color:var(--blood)">&#10071;</span><span data-i="overkillpts">overkill of points</span></div>
+  <div id="fasterTag">FASTER!</div>
+  <div id="actions">
+    <div class="act" id="aDraw"><span class="mk">L&times;2</span> <span data-i="draw">Draw a card</span></div>
+    <div class="act" id="aPass"><span class="mk">R&times;2</span> <span data-i="keep">Keep current hand</span></div>
+    <div class="act" id="aTrump"><span class="mk">Spc</span> <span data-i="usetrump">Use a trump card</span></div>
+  </div>
+  <div id="trumpTray" class="hidden"><div class="hdr" data-i="trumps">TRUMPS</div></div>
+  <div id="log"></div>
+  <div id="subtitle"></div>
+  <div id="banner"></div>
+</div>
+<div id="confirm"></div>
+
+<!-- GAME OVER -->
+<div id="gameover" class="hidden">
+  <h1>GAME OVER!</h1>
+  <div class="podium">
+    <div class="player-block"><div class="avatar" id="goYouAv">0<div class="body"></div></div><div class="pname" id="goYouName">player</div></div>
+    <div class="colon">:</div>
+    <div class="player-block"><div class="avatar" id="goBotAv">0<div class="body"></div></div><div class="pname">BOT</div></div>
+  </div>
+  <div class="go-buttons"><div id="goAgain" data-i="playagain">PLAY AGAIN</div><div id="goMenu" data-i="menu">MENU</div></div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="js/constants.js"></script>
+<script src="js/graphics.js"></script>
+<script src="js/scene.js"></script>
+<script src="js/animation.js"></script>
+<script src="js/game.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
